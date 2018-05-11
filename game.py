@@ -20,10 +20,11 @@ class Game:
         game_folder = os.path.dirname(__file__)
         assets_folder = os.path.join(game_folder, 'assets')
 
-        map_file = os.path.join(assets_folder, 'map.txt')
+        map_file = os.path.join(assets_folder, 'map2.txt')
         self.map = Map(map_file)
 
     def new(self):
+        self.camera = Camera(self.map.width, self.map.height)
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
 
@@ -57,11 +58,13 @@ class Game:
 
     def update(self):
         self.all_sprites.update()
+        self.camera.update(self.player)
 
     def draw(self):
         self.screen.fill(BGCOLOR)
         self.draw_grid()
-        self.all_sprites.draw(self.screen)
+        for sprite in self.all_sprites:
+            self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()
 
     def draw_grid(self):
