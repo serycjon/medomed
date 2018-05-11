@@ -2,6 +2,7 @@ import pygame as pg
 import os
 import sys
 
+from tilemap import *
 from settings import *
 from sprites import *
 
@@ -20,17 +21,13 @@ class Game:
         assets_folder = os.path.join(game_folder, 'assets')
 
         map_file = os.path.join(assets_folder, 'map.txt')
-
-        self.map_data = []
-        with open(map_file, 'r') as fin:
-            for line in fin:
-                self.map_data.append(line)
+        self.map = Map(map_file)
 
     def new(self):
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
 
-        for r, tiles in enumerate(self.map_data):
+        for r, tiles in enumerate(self.map.data):
             for c, tile in enumerate(tiles):
                 if tile == '1':
                     Wall(self, c, r)
