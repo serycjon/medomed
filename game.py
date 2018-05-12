@@ -12,6 +12,7 @@ import random
 from tilemap import *
 from settings import *
 from sprites import *
+from robot import *
 
 class Game:
     def __init__(self):
@@ -114,7 +115,7 @@ class Game:
         if self.ready_for_command:
             try:
                 command = self.command_queue.get(block=False)
-                print('command: {}'.format(command))
+                # print('command: {}'.format(command))
                 if command[0] in commands:
                     self.ready_for_command = False
                     try:
@@ -170,45 +171,9 @@ class Game:
         for y in range(0, HEIGHT, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
-class Robot:
-    def __init__(self, game):
-        self.game = game
-        self.responses = Queue()
-        self.game.response_queue = self.responses
-
-    def send(self, command):
-        self.game.command_queue.put(command)
-        return self.responses.get(block=True)
-
-    def turn(self, angle):
-        return self.send(('turn', angle))
-
-    def forward(self, distance):
-        return self.send(('forward', distance))
-
-    def status(self):
-        return self.send(('status', ))
-
-    def worker(self):
-        sign = -1
-        while True:
-            self.forward(1)
-            angle = self.status()['player']['rot'] + 90 * sign
-            self.turn(angle)
-            self.forward(1)
-            angle = self.status()['player']['rot'] + 90 * sign
-            self.turn(angle)
-            sign = sign * -1
-        
-    def run(self):
-        self.thread = Thread(target=self.worker)
-        self.thread.daemon = True
-        self.thread.start()
-        print('worker started')
-
 if __name__ == '__main__':
     game = Game()
     game.new()
-    robot = Robot(game)
+    robot = ZigZagRobot(game)
     robot.run()
     game.run()
