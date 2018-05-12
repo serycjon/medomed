@@ -25,9 +25,11 @@ class Game:
     def load_data(self):
         game_folder = os.path.dirname(__file__)
         assets_folder = os.path.join(game_folder, 'assets')
+        map_folder = os.path.join(assets_folder, 'maps')
 
-        map_file = os.path.join(assets_folder, 'map2.txt')
-        self.map = Map(map_file)
+        self.map = TiledMap(os.path.join(map_folder, 'map.tmx'))
+        self.map_img = self.map.make_map()
+        self.map_rect = self.map_img.get_rect()
 
         self.player_img = self.load_img(
             os.path.join(assets_folder, PLAYER_IMG),
@@ -47,14 +49,15 @@ class Game:
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
 
-        for r, tiles in enumerate(self.map.data):
-            for c, tile in enumerate(tiles):
-                if tile == '1':
-                    Wall(self, c, r)
-                if tile == 'P':
-                    self.player = Player(self, c, r)
-                if tile == 'M':
-                    Mob(self, c, r)
+        # for r, tiles in enumerate(self.map.data):
+        #     for c, tile in enumerate(tiles):
+        #         if tile == '1':
+        #             Wall(self, c, r)
+        #         if tile == 'P':
+        #             self.player = Player(self, c, r)
+        #         if tile == 'M':
+        #             Mob(self, c, r)
+        self.player = Player(self, 5, 5)
 
     def run(self):
         self.running = True
@@ -84,6 +87,7 @@ class Game:
     def draw(self):
         pg.display.set_caption('fps: {:.2f}'.format(self.clock.get_fps()))
         self.screen.fill(BGCOLOR)
+        self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
         # self.draw_grid()
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
