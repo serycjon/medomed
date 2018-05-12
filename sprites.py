@@ -29,13 +29,14 @@ class Player(pg.sprite.Sprite):
         self.game = game
         self.image = game.player_img
         self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
         self.hit_rect = PLAYER_HIT_RECT
         self.hit_rect.center = self.rect.center
 
         self.vel = vec(0, 0)
         self.rot = 0 # right
         self.rot_speed = 0
-        self.pos = vec(x, y) * TILESIZE + vec(TILESIZE/2, TILESIZE/2)
+        self.pos = vec(x, y)
 
     def get_keys(self):
         self.vel = vec(0, 0)
@@ -78,8 +79,9 @@ class Mob(pg.sprite.Sprite):
 
         self.image = game.mob_img
         self.rect = self.image.get_rect()
+        self.hit_rect = self.rect
 
-        self.pos = vec(x, y) * TILESIZE + vec(TILESIZE/2, TILESIZE/2)
+        self.pos = vec(x, y)
         self.rect.center = self.pos
 
         self.rot = 0
@@ -90,6 +92,17 @@ class Mob(pg.sprite.Sprite):
         self.image = pg.transform.rotate(self.game.mob_img, self.rot)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
+
+class Obstacle(pg.sprite.Sprite):
+    def __init__(self, game, x, y, w, h):
+        self.groups = game.walls
+        pg.sprite.Sprite.__init__(self, self.groups)
+
+        self.rect = pg.Rect(x, y, w, h)
+        self.x = x
+        self.y = y
+        self.rect.x = self.x
+        self.rect.y = self.y
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
