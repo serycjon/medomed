@@ -24,6 +24,7 @@ def collide_with_walls(sprite, group, direction):
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = PLAYER_LAYER
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -72,6 +73,7 @@ class Player(pg.sprite.Sprite):
 
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = MOB_LAYER
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
 
@@ -106,6 +108,7 @@ class Obstacle(pg.sprite.Sprite):
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = WALL_LAYER
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
 

@@ -45,7 +45,7 @@ class Game:
 
     def new(self):
         self.camera = Camera(self.map.width, self.map.height)
-        self.all_sprites = pg.sprite.Group()
+        self.all_sprites = pg.sprite.LayeredUpdates()
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
 

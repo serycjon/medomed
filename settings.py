@@ -33,3 +33,8 @@ WALL_IMG = os.path.join('robot-pack', 'PNG', 'Top view', 'robot_3Dgreen.png')
 
 # Mobs
 MOB_IMG = os.path.join('robot-pack', 'PNG', 'Top view', 'robot_3Dred.png')
+
+# Layers
+WALL_LAYER = 1
+PLAYER_LAYER = 2
+MOB_LAYER = 2
