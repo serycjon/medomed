@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="60" height="50" tilewidth="32" tileheight="32" infinite="0" nextobjectid="14">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="60" height="50" tilewidth="32" tileheight="32" infinite="0" nextobjectid="25">
  <tileset firstgid="1" source="../RPG base.tsx"/>
  <layer name="Ground" width="60" height="50">
   <data encoding="csv">
@@ -280,6 +280,17 @@
   <object id="6" name="wall" x="74.8774" y="107.798" width="38.7296" height="109.734"/>
   <object id="7" name="wall" x="12.2644" y="10.3279" width="38.7296" height="109.734"/>
   <object id="8" name="wall" x="389.233" y="484.121" width="115.543" height="148.464"/>
-  <object id="13" name="wall" x="0.323" y="-0.000138394" width="790.085" height="21.9471"/>
+  <object id="13" name="wall" x="-3.53689" y="-14.4747" width="1936.47" height="20.0171"/>
+  <object id="14" name="apple" x="73.4481" y="26.5245" width="13.5554" height="12.2644"/>
+  <object id="15" name="wall" x="-7.12335" y="1592.81" width="1936.47" height="20.0171"/>
+  <object id="16" name="wall" x="-11.4927" y="-12.0013" width="16.8821" height="1628.73"/>
+  <object id="17" name="wall" x="1911.99" y="-14.713" width="16.8821" height="1628.73"/>
+  <object id="18" name="apple" x="102.374" y="29.4606" width="13.5554" height="12.2644"/>
+  <object id="19" name="apple" x="74.6903" y="60.3077" width="13.5554" height="12.2644"/>
+  <object id="20" name="apple" x="134.803" y="66.6353" width="13.5554" height="12.2644"/>
+  <object id="21" name="apple" x="43.0522" y="143.358" width="13.5554" height="12.2644"/>
+  <object id="22" name="apple" x="118.193" y="204.261" width="13.5554" height="12.2644"/>
+  <object id="23" name="apple" x="190.169" y="139.403" width="13.5554" height="12.2644"/>
+  <object id="24" name="apple" x="147.458" y="105.392" width="13.5554" height="12.2644"/>
  </objectgroup>
 </map>

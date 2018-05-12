@@ -38,3 +38,7 @@ MOB_IMG = os.path.join('robot-pack', 'PNG', 'Top view', 'robot_3Dred.png')
 WALL_LAYER = 1
 PLAYER_LAYER = 2
 MOB_LAYER = 2
+ITEMS_LAYER = 1
+
+# Items
+ITEM_IMAGES = {'apple': 'apple.png'}

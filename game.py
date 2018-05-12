@@ -26,6 +26,7 @@ class Game:
         game_folder = os.path.dirname(__file__)
         assets_folder = os.path.join(game_folder, 'assets')
         map_folder = os.path.join(assets_folder, 'maps')
+        img_folder = os.path.join(assets_folder, 'images')
 
         self.map = TiledMap(os.path.join(map_folder, 'map.tmx'))
         self.map_img = self.map.make_map()
@@ -43,15 +44,24 @@ class Game:
             os.path.join(assets_folder, WALL_IMG),
             (TILESIZE, TILESIZE))
 
+        self.item_images = {}
+        for item in ITEM_IMAGES:
+            self.item_images[item] = \
+                self.load_img(os.path.join(img_folder, ITEM_IMAGES[item]),
+                              (TILESIZE, TILESIZE))
+
     def new(self):
         self.camera = Camera(self.map.width, self.map.height)
         self.all_sprites = pg.sprite.LayeredUpdates()
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
+        self.items = pg.sprite.Group()
 
         for tile_object in self.map.tmxdata.objects:
+            object_center = vec(tile_object.x + tile_object.width / 2,
+                                tile_object.y + tile_object.height / 2)
             if tile_object.name == 'player':
-                self.player = Player(self, tile_object.x, tile_object.y)
+                self.player = Player(self, object_center.x, object_center.y)
             if tile_object.name == 'wall':
                 Obstacle(self,
                          tile_object.x,
@@ -59,7 +69,10 @@ class Game:
                          tile_object.width,
                          tile_object.height)
             if tile_object.name == 'mob':
-                Mob(self, tile_object.x, tile_object.y)
+                Mob(self, object_center.x, object_center.y)
+
+            if tile_object.name in ['apple']:
+                Item(self, object_center, tile_object.name)
 
         self.draw_debug = False
 
@@ -89,6 +102,11 @@ class Game:
     def update(self):
         self.all_sprites.update()
         self.camera.update(self.player)
+        # Player hits item
+        hits = pg.sprite.spritecollide(self.player, self.items, False)
+        for hit in hits:
+            if hit.type == 'apple':
+                hit.kill()
 
     def draw(self):
         pg.display.set_caption('fps: {:.2f}'.format(self.clock.get_fps()))
