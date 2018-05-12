@@ -131,6 +131,17 @@ class Game:
     def status(self):
         status = {}
         status['player'] = self.player.status()
+        status['sense'] = {'on': [],
+                           'near': []}
+        for item in self.items:
+            item_pos = item.rect.center
+            to_item = item_pos - self.player.pos
+            if to_item.length_squared() < ROBOT_SENSE_DIST**2:
+                where = 'near'
+                if pg.sprite.spritecollide(self.player, [item], False, collide_hit_rect):
+                    where = 'on'
+                status['sense'][where].append({'type': deepcopy(item.type),
+                                               'vec': to_item})
         self.response_queue.put(status)
         self.ready_for_command = True
 
@@ -138,10 +149,10 @@ class Game:
         self.all_sprites.update()
         self.camera.update(self.player)
         # Player hits item
-        hits = pg.sprite.spritecollide(self.player, self.items, False, collide_hit_rect)
-        for hit in hits:
-            if hit.type == 'apple':
-                hit.kill()
+        # hits = pg.sprite.spritecollide(self.player, self.items, False, collide_hit_rect)
+        # for hit in hits:
+        #     if hit.type == 'apple':
+        #         pass
 
     def draw(self):
         pg.display.set_caption('fps: {:.2f}'.format(self.clock.get_fps()))

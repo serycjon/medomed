@@ -1,6 +1,7 @@
 from queue import Queue
 from threading import Thread
 from time import sleep
+from pprint import pprint
 
 class Robot:
     def __init__(self, game):
