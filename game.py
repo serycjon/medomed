@@ -103,7 +103,7 @@ class Game:
         self.all_sprites.update()
         self.camera.update(self.player)
         # Player hits item
-        hits = pg.sprite.spritecollide(self.player, self.items, False)
+        hits = pg.sprite.spritecollide(self.player, self.items, False, collide_hit_rect)
         for hit in hits:
             if hit.type == 'apple':
                 hit.kill()
@@ -115,9 +115,13 @@ class Game:
         # self.draw_grid()
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+            if hasattr(sprite, 'hit_rect'):
+                rect = sprite.hit_rect
+            else:
+                rect = sprite.rect
             if self.draw_debug:
                 pg.draw.rect(self.screen, WHITE,
-                             self.camera.apply_rect(sprite.hit_rect), 1)
+                             self.camera.apply_rect(rect), 1)
 
         if self.draw_debug:
             for wall in self.walls:

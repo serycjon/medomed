@@ -1,6 +1,7 @@
 import pygame as pg
 from settings import *
 from tilemap import collide_hit_rect
+import pytweening as tween
 
 vec = pg.math.Vector2
 
@@ -130,4 +131,18 @@ class Item(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.type = type
 
+        self.pos = pos
         self.rect.center = pos
+        self.tween = tween.easeInOutSine
+        self.bob_step = 0
+        self.bob_direction = 1
+
+    def update(self):
+        # bobbing
+        offset = ITEM_BOB_RANGE * (self.tween(self.bob_step / ITEM_BOB_RANGE) - 0.5)
+        self.rect.centery = self.pos.y + offset * self.bob_direction
+
+        self.bob_step += ITEM_BOB_SPEED
+        if self.bob_step > ITEM_BOB_RANGE:
+            self.bob_step = 0
+            self.bob_direction *= -1
