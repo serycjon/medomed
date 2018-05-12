@@ -2,6 +2,13 @@ import pygame as pg
 import os
 import sys
 
+from Queue import Queue
+from threading import Thread
+from time import sleep
+
+from copy import deepcopy
+import random
+
 from tilemap import *
 from settings import *
 from sprites import *
@@ -15,6 +22,8 @@ class Game:
         self.clock = pg.time.Clock()
         pg.key.set_repeat(500, 100)
         self.load_data()
+        self.command_queue = Queue()
+        self.ready_for_command = True
 
     def load_img(self, path, size=None):
         img = pg.image.load(path).convert_alpha()
@@ -75,6 +84,7 @@ class Game:
                 Item(self, object_center, tile_object.name)
 
         self.draw_debug = False
+        self.ready_for_command = True
 
     def run(self):
         self.running = True
@@ -98,6 +108,30 @@ class Game:
                     self.quit()
                 if event.key == pg.K_d:
                     self.draw_debug = not self.draw_debug
+        commands = {'forward': self.player.go_forward,
+                    'turn': self.player.turn,
+                    'status': self.status}
+        if self.ready_for_command:
+            try:
+                command = self.command_queue.get(block=False)
+                print('command: {}'.format(command))
+                if command[0] in commands:
+                    self.ready_for_command = False
+                    try:
+                        commands[command[0]](*command[1:])
+                    except Exception, e:
+                        self.response_queue.put(repr(e))
+                        self.ready_for_command = True
+                else:
+                    self.response_queue.put("incorrect command")
+            except:
+                pass
+
+    def status(self):
+        status = {}
+        status['player'] = self.player.status()
+        self.response_queue.put(status)
+        self.ready_for_command = True
 
     def update(self):
         self.all_sprites.update()
@@ -135,10 +169,46 @@ class Game:
             pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
         for y in range(0, HEIGHT, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
+
+class Robot:
+    def __init__(self, game):
+        self.game = game
+        self.responses = Queue()
+        self.game.response_queue = self.responses
+
+    def send(self, command):
+        self.game.command_queue.put(command)
+        return self.responses.get(block=True)
+
+    def turn(self, angle):
+        return self.send(('turn', angle))
+
+    def forward(self, distance):
+        return self.send(('forward', distance))
+
+    def status(self):
+        return self.send(('status', ))
+
+    def worker(self):
+        sign = -1
+        while True:
+            self.forward(1)
+            angle = self.status()['player']['rot'] + 90 * sign
+            self.turn(angle)
+            self.forward(1)
+            angle = self.status()['player']['rot'] + 90 * sign
+            self.turn(angle)
+            sign = sign * -1
         
+    def run(self):
+        self.thread = Thread(target=self.worker)
+        self.thread.daemon = True
+        self.thread.start()
+        print('worker started')
 
 if __name__ == '__main__':
     game = Game()
     game.new()
+    robot = Robot(game)
+    robot.run()
     game.run()
-
