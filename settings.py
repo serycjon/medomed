@@ -1,3 +1,5 @@
+import pygame as pg
+
 WIDTH = 960 # 30 x 32
 HEIGHT = 736 # 23 x 32
 
@@ -22,3 +24,5 @@ DRIDHEIGHT = HEIGHT / TILESIZE
 
 # Player
 PLAYER_SPEED = 400
+PLAYER_ROT_SPEED = 250
+PLAYER_HIT_RECT = pg.Rect(0, 0, 20, 20)

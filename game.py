@@ -23,6 +23,12 @@ class Game:
         map_file = os.path.join(assets_folder, 'map2.txt')
         self.map = Map(map_file)
 
+        player_img_path = os.path.join(assets_folder, 'robot-pack',
+                                       'PNG', 'Top view', 'robot_3Dblue.png')
+        self.player_img = pg.image.load(player_img_path).convert_alpha()
+        self.player_img = pg.transform.scale(self.player_img, (TILESIZE,
+                                                               TILESIZE))
+
     def new(self):
         self.camera = Camera(self.map.width, self.map.height)
         self.all_sprites = pg.sprite.Group()
