@@ -43,15 +43,15 @@ class Game:
         self.map_rect = self.map_img.get_rect()
 
         self.player_img = self.load_img(
-            os.path.join(assets_folder, PLAYER_IMG),
+            os.path.join(img_folder, PLAYER_IMG),
             (TILESIZE, TILESIZE))
 
         self.mob_img = self.load_img(
-            os.path.join(assets_folder, MOB_IMG),
+            os.path.join(img_folder, MOB_IMG),
             (TILESIZE, TILESIZE))
 
         self.wall_img = self.load_img(
-            os.path.join(assets_folder, WALL_IMG),
+            os.path.join(img_folder, WALL_IMG),
             (TILESIZE, TILESIZE))
 
         self.item_images = {}

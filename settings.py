@@ -25,14 +25,14 @@ DRIDHEIGHT = HEIGHT / TILESIZE
 
 # Player
 PLAYER_SPEED = 400
-PLAYER_IMG = os.path.join('robot-pack', 'PNG', 'Top view', 'robot_3Dblue.png')
+PLAYER_IMG = 'robot_3Dblue.png'
 PLAYER_ROT_SPEED = 250
 PLAYER_HIT_RECT = pg.Rect(0, 0, 20, 20)
 
-WALL_IMG = os.path.join('robot-pack', 'PNG', 'Top view', 'robot_3Dgreen.png')
+WALL_IMG = 'robot_3Dred.png'
 
 # Mobs
-MOB_IMG = os.path.join('robot-pack', 'PNG', 'Top view', 'robot_3Dred.png')
+MOB_IMG = 'robot_3Dred.png'
 
 # Layers
 WALL_LAYER = 1
