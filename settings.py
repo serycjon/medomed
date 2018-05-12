@@ -30,3 +30,6 @@ PLAYER_ROT_SPEED = 250
 PLAYER_HIT_RECT = pg.Rect(0, 0, 20, 20)
 
 WALL_IMG = os.path.join('robot-pack', 'PNG', 'Top view', 'robot_3Dgreen.png')
+
+# Mobs
+MOB_IMG = os.path.join('robot-pack', 'PNG', 'Top view', 'robot_3Dred.png')

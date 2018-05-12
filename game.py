@@ -32,6 +32,11 @@ class Game:
         self.player_img = self.load_img(
             os.path.join(assets_folder, PLAYER_IMG),
             (TILESIZE, TILESIZE))
+
+        self.mob_img = self.load_img(
+            os.path.join(assets_folder, MOB_IMG),
+            (TILESIZE, TILESIZE))
+
         self.wall_img = self.load_img(
             os.path.join(assets_folder, WALL_IMG),
             (TILESIZE, TILESIZE))
@@ -40,6 +45,7 @@ class Game:
         self.camera = Camera(self.map.width, self.map.height)
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
+        self.mobs = pg.sprite.Group()
 
         for r, tiles in enumerate(self.map.data):
             for c, tile in enumerate(tiles):
@@ -47,6 +53,8 @@ class Game:
                     Wall(self, c, r)
                 if tile == 'P':
                     self.player = Player(self, c, r)
+                if tile == 'M':
+                    Mob(self, c, r)
 
     def run(self):
         self.running = True
