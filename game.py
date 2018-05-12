@@ -2,7 +2,7 @@ import pygame as pg
 import os
 import sys
 
-from Queue import Queue
+from queue import Queue
 from threading import Thread
 from time import sleep
 
@@ -120,7 +120,7 @@ class Game:
                     self.ready_for_command = False
                     try:
                         commands[command[0]](*command[1:])
-                    except Exception, e:
+                    except Exception as e:
                         self.response_queue.put(repr(e))
                         self.ready_for_command = True
                 else:
