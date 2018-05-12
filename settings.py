@@ -1,3 +1,4 @@
+import os
 import pygame as pg
 
 WIDTH = 960 # 30 x 32
@@ -24,5 +25,8 @@ DRIDHEIGHT = HEIGHT / TILESIZE
 
 # Player
 PLAYER_SPEED = 400
+PLAYER_IMG = os.path.join('robot-pack', 'PNG', 'Top view', 'robot_3Dblue.png')
 PLAYER_ROT_SPEED = 250
 PLAYER_HIT_RECT = pg.Rect(0, 0, 20, 20)
+
+WALL_IMG = os.path.join('robot-pack', 'PNG', 'Top view', 'robot_3Dgreen.png')

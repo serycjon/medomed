@@ -16,6 +16,12 @@ class Game:
         pg.key.set_repeat(500, 100)
         self.load_data()
 
+    def load_img(self, path, size=None):
+        img = pg.image.load(path).convert_alpha()
+        if size is not None:
+            img = pg.transform.scale(img, size)
+        return img
+
     def load_data(self):
         game_folder = os.path.dirname(__file__)
         assets_folder = os.path.join(game_folder, 'assets')
@@ -23,11 +29,12 @@ class Game:
         map_file = os.path.join(assets_folder, 'map2.txt')
         self.map = Map(map_file)
 
-        player_img_path = os.path.join(assets_folder, 'robot-pack',
-                                       'PNG', 'Top view', 'robot_3Dblue.png')
-        self.player_img = pg.image.load(player_img_path).convert_alpha()
-        self.player_img = pg.transform.scale(self.player_img, (TILESIZE,
-                                                               TILESIZE))
+        self.player_img = self.load_img(
+            os.path.join(assets_folder, PLAYER_IMG),
+            (TILESIZE, TILESIZE))
+        self.wall_img = self.load_img(
+            os.path.join(assets_folder, WALL_IMG),
+            (TILESIZE, TILESIZE))
 
     def new(self):
         self.camera = Camera(self.map.width, self.map.height)
@@ -67,8 +74,9 @@ class Game:
         self.camera.update(self.player)
 
     def draw(self):
+        pg.display.set_caption('fps: {:.2f}'.format(self.clock.get_fps()))
         self.screen.fill(BGCOLOR)
-        self.draw_grid()
+        # self.draw_grid()
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()
