@@ -10,3 +10,9 @@ class TestRobot(Robot):
             status = self.status()
             pprint(status)
             sleep(2)
+
+class ForwardRobot(Robot):
+    def worker(self):
+        while True:
+            self.forward(1)
+            sleep(2)

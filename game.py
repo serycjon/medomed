@@ -14,7 +14,7 @@ from tilemap import *
 from settings import *
 from sprites import *
 from robot import *
-from user_robots import *
+import user_robots
 
 class Game:
     def __init__(self):
@@ -218,12 +218,19 @@ class Game:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--manual', action='store_true')
+    parser.add_argument('--bot', help='robot class name', default='TestRobot')
     args = parser.parse_args()
+    if not hasattr(user_robots, args.bot):
+        print('robot not found!')
+        sys.exit(1)
 
     game = Game()
     game.new()
     game.menu()
-    game.run()
     if not args.manual:
-        robot = TestRobot(game)
+        robot_class = getattr(user_robots, args.bot)
+        print('robot_class: {}'.format(robot_class))
+
+        robot = robot_class(game)
         robot.run()
+    game.run()
