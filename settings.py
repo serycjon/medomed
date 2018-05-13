@@ -4,6 +4,8 @@ import pygame as pg
 WIDTH = 960 # 30 x 32
 HEIGHT = 736 # 23 x 32
 
+FONT_NAME = 'arial'
+
 TITLE = 'Medomed'
 FPS = 60
 

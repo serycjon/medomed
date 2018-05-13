@@ -24,6 +24,7 @@ class Game:
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         pg.key.set_repeat(500, 100)
+        self.font_name = pg.font.match_font(FONT_NAME)
         self.load_data()
         self.command_queue = Queue()
         self.ready_for_command = True
@@ -89,6 +90,36 @@ class Game:
         self.draw_debug = False
         self.ready_for_command = True
 
+    def draw_text(self, text, size, color, x, y):
+        font = pg.font.Font(self.font_name, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (x, y)
+        self.screen.blit(text_surface, text_rect)
+
+    def menu(self):
+        self.screen.fill(BGCOLOR)
+        self.draw_text(TITLE, 48, LIGHTGREY, WIDTH/2, HEIGHT / 3)
+        self.draw_text('Press any key to start...',
+                       20,
+                       LIGHTGREY,
+                       WIDTH/2, HEIGHT / 3 + 60)
+        pg.display.flip()
+        self.wait_key()
+
+    def wait_key(self):
+        waiting = True
+        while waiting:
+            self.dt = self.clock.tick(FPS) / 1000.0
+
+            for event in pg.event.get():
+                # check for closing window
+                if event.type == pg.QUIT:
+                    waiting = False
+                    self.quit()
+                if event.type == pg.KEYUP:
+                    waiting = False
+            
     def run(self):
         self.running = True
         while self.running:
@@ -191,7 +222,8 @@ if __name__ == '__main__':
 
     game = Game()
     game.new()
+    game.menu()
+    game.run()
     if not args.manual:
         robot = TestRobot(game)
         robot.run()
-    game.run()
