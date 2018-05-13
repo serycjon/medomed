@@ -1,4 +1,5 @@
 import pygame as pg
+import argparse
 import os
 import sys
 
@@ -183,8 +184,13 @@ class Game:
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--manual', action='store_true')
+    args = parser.parse_args()
+
     game = Game()
     game.new()
-    robot = ZigZagRobot(game)
-    robot.run()
+    if not args.manual:
+        robot = TestRobot(game)
+        robot.run()
     game.run()

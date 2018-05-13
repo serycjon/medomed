@@ -30,16 +30,10 @@ class Robot:
         self.thread.daemon = True
         self.thread.start()
 
-class ZigZagRobot(Robot):
+class TestRobot(Robot):
     def worker(self):
-        sign = -1
         while True:
-            self.forward(1)
-            angle = self.status()['player']['rot'] + 90 * sign
-            self.turn(angle)
-            self.forward(1)
-            angle = self.status()['player']['rot'] + 90 * sign
-            self.turn(angle)
-            sign = sign * -1
-            sleep(1)
+            status = self.status()
+            pprint(status)
+            sleep(2)
         
