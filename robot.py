@@ -1,7 +1,5 @@
 from queue import Queue
 from threading import Thread
-from time import sleep
-from pprint import pprint
 
 class Robot:
     def __init__(self, game):
@@ -29,11 +27,3 @@ class Robot:
         self.thread = Thread(target=self.worker)
         self.thread.daemon = True
         self.thread.start()
-
-class TestRobot(Robot):
-    def worker(self):
-        while True:
-            status = self.status()
-            pprint(status)
-            sleep(2)
-        

@@ -14,6 +14,7 @@ from tilemap import *
 from settings import *
 from sprites import *
 from robot import *
+from user_robots import *
 
 class Game:
     def __init__(self):
