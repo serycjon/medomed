@@ -45,6 +45,9 @@ class Player(pg.sprite.Sprite):
         self.rot_speed = 0
         self.pos = vec(x, y)
 
+        self.inventory_size = INVENTORY_SIZE
+        self.inventory = []
+
         self.goal = None
         self.goal_mode = False
         self.angle_goal_mode = False
@@ -79,6 +82,22 @@ class Player(pg.sprite.Sprite):
         self.angle_goal = angle % 360
         self.angle_goal_mode = True
         self.should_respond = True
+
+    def pick(self, item_name):
+        if len(self.inventory) >= self.inventory_size:
+            raise RuntimeError("Inventory full")
+        hits = pg.sprite.spritecollide(self, self.game.items, False, collide_hit_rect)
+        found = False
+        for hit in hits:
+            if hit.type == item_name:
+                self.inventory.append(item_name)
+                hit.kill()
+                self.game.response_queue.put("OK")
+                found = True
+                break
+        if not found:
+            self.game.response_queue.put("Not found")
+        self.game.ready_for_command = True
 
     def follow_goal(self):
         self.vel = vec(0, 0)

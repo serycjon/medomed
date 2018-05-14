@@ -1,5 +1,6 @@
 from queue import Queue
 from threading import Thread
+from time import sleep
 
 class Robot:
     def __init__(self, game):
@@ -19,6 +20,12 @@ class Robot:
 
     def status(self):
         return self.send(('status', ))
+
+    def pick(self, item):
+        return self.send(('pick', item))
+
+    def sleep(self, seconds):
+        sleep(seconds)
 
     def worker(self):
         raise NotImplementedError("Subclasses must override worker()!")

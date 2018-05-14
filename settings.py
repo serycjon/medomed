@@ -30,6 +30,7 @@ PLAYER_SPEED = 400
 PLAYER_IMG = 'robot_3Dblue.png'
 PLAYER_ROT_SPEED = 250
 PLAYER_HIT_RECT = pg.Rect(0, 0, 20, 20)
+INVENTORY_SIZE = 3
 
 WALL_IMG = 'robot_3Dred.png'
 

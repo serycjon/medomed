@@ -144,7 +144,8 @@ class Game:
                     self.draw_debug = not self.draw_debug
         commands = {'forward': self.player.go_forward,
                     'turn': self.player.turn,
-                    'status': self.status}
+                    'status': self.status,
+                    'pick': self.player.pick}
         if self.ready_for_command:
             try:
                 command = self.command_queue.get(block=False)
