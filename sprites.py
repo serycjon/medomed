@@ -47,15 +47,18 @@ class Player(pg.sprite.Sprite):
 
         self.inventory_size = INVENTORY_SIZE
         self.inventory = []
+        self.last_drop = 0
 
         self.goal = None
         self.goal_mode = False
         self.angle_goal_mode = False
 
+
     def status(self):
         result = {}
         result['pos'] = deepcopy(self.rect.center)
         result['rot'] = deepcopy(self.rot)
+        result['inventory'] = deepcopy(self.inventory)
 
         return result
 
@@ -72,6 +75,19 @@ class Player(pg.sprite.Sprite):
             self.vel = vec(PLAYER_SPEED, 0).rotate(-self.rot)
         if keys[pg.K_DOWN] or keys[pg.K_o]:
             self.vel = vec(-PLAYER_SPEED, 0).rotate(-self.rot)
+        if keys[pg.K_SPACE]:
+            try:
+                self.pick('anything')
+            except:
+                pass
+        if keys[pg.K_b]:
+            cur_time = pg.time.get_ticks()
+            if cur_time - self.last_drop > DROP_INTERVAL:
+                try:
+                    self.drop(0)
+                    self.last_drop = cur_time
+                except:
+                    pass
 
     def go_forward(self, distance):
         self.goal = self.pos + vec(TILESIZE * distance, 0).rotate(-self.rot)
@@ -89,14 +105,23 @@ class Player(pg.sprite.Sprite):
         hits = pg.sprite.spritecollide(self, self.game.items, False, collide_hit_rect)
         found = False
         for hit in hits:
-            if hit.type == item_name:
-                self.inventory.append(item_name)
+            if item_name == 'anything' or hit.type == item_name:
+                self.inventory.append(hit.type)
                 hit.kill()
                 self.game.response_queue.put("OK")
                 found = True
                 break
         if not found:
             self.game.response_queue.put("Not found")
+        self.game.ready_for_command = True
+
+    def drop(self, inventory_number):
+        if inventory_number < 0 or inventory_number >= len(self.inventory):
+            raise RuntimeError("Inventory index out of bounds")
+        item_name = self.inventory.pop(inventory_number)
+        Item(self.game, vec(self.rect.centerx,
+                            self.rect.centery), item_name)
+        self.game.response_queue.put("Dropped {}".format(item_name))
         self.game.ready_for_command = True
 
     def follow_goal(self):

@@ -145,7 +145,8 @@ class Game:
         commands = {'forward': self.player.go_forward,
                     'turn': self.player.turn,
                     'status': self.status,
-                    'pick': self.player.pick}
+                    'pick': self.player.pick,
+                    'drop': self.player.drop}
         if self.ready_for_command:
             try:
                 command = self.command_queue.get(block=False)

@@ -8,7 +8,18 @@ class Robot:
         self.responses = Queue()
         self.game.response_queue = self.responses
 
+    def queue_clear(self):
+        q = self.responses
+        while not q.empty():
+            try:
+                q.get(False)
+            except Empty:
+                continue
+            q.task_done()
+
     def send(self, command):
+        self.queue_clear()
+
         self.game.command_queue.put(command)
         return self.responses.get(block=True)
 
@@ -23,6 +34,9 @@ class Robot:
 
     def pick(self, item):
         return self.send(('pick', item))
+
+    def drop(self, item_number):
+        return self.send(('drop', item_number))
 
     def sleep(self, seconds):
         sleep(seconds)
