@@ -15,6 +15,7 @@ from settings import *
 from sprites import *
 from robot import *
 import user_robots
+import levels
 
 class Game:
     def __init__(self):
@@ -30,6 +31,10 @@ class Game:
         self.ready_for_command = True
         self.draw_inventory = False
 
+    def set_level(self, level_cls):
+        self.level = level_cls(self)
+        self.level.make_map()
+
     def load_img(self, path, size=None):
         img = pg.image.load(path).convert_alpha()
         if size is not None:
@@ -38,13 +43,17 @@ class Game:
 
     def load_data(self):
         game_folder = os.path.dirname(__file__)
+        self.game_folder = game_folder
         assets_folder = os.path.join(game_folder, 'assets')
+        self.assets_folder = assets_folder
         map_folder = os.path.join(assets_folder, 'maps')
+        self.map_folder = map_folder
         img_folder = os.path.join(assets_folder, 'images')
+        self.img_folder = img_folder
 
-        self.map = TiledMap(os.path.join(map_folder, 'map.tmx'))
-        self.map_img = self.map.make_map()
-        self.map_rect = self.map_img.get_rect()
+        # self.map = TiledMap(os.path.join(map_folder, 'level_3.tmx'))
+        # self.map_img = self.map.make_map()
+        # self.map_rect = self.map_img.get_rect()
 
         self.player_img = self.load_img(
             os.path.join(img_folder, PLAYER_IMG),
@@ -65,31 +74,10 @@ class Game:
                               (TILESIZE, TILESIZE))
 
     def new(self):
-        self.camera = Camera(self.map.width, self.map.height)
-        self.all_sprites = pg.sprite.LayeredUpdates()
-        self.walls = pg.sprite.Group()
-        self.mobs = pg.sprite.Group()
-        self.items = pg.sprite.Group()
-
-        for tile_object in self.map.tmxdata.objects:
-            object_center = vec(tile_object.x + tile_object.width / 2,
-                                tile_object.y + tile_object.height / 2)
-            if tile_object.name == 'player':
-                self.player = Player(self, object_center.x, object_center.y)
-            if tile_object.name == 'wall':
-                Obstacle(self,
-                         tile_object.x,
-                         tile_object.y,
-                         tile_object.width,
-                         tile_object.height)
-            if tile_object.name == 'mob':
-                Mob(self, object_center.x, object_center.y)
-
-            if tile_object.name in ['apple']:
-                Item(self, object_center, tile_object.name)
-
-        self.draw_debug = False
-        self.ready_for_command = True
+        self.level.clear_sprites()
+        self.level.new()
+        game.draw_debug = False
+        game.ready_for_command = True
 
     def draw_text(self, text, size, color, x, y, align='midtop'):
         font = pg.font.Font(self.font_name, size)
@@ -269,18 +257,23 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--manual', action='store_true')
     parser.add_argument('--bot', help='robot class name', default='TestRobot')
+    parser.add_argument('--level', help='level class name', default='LevelOne')
     args = parser.parse_args()
     if not hasattr(user_robots, args.bot):
         print('robot not found!')
         sys.exit(1)
+    if not hasattr(levels, args.level):
+        print('level not found!')
+        sys.exit(1)
 
     game = Game()
-    game.new()
     game.menu()
     if not args.manual:
         robot_class = getattr(user_robots, args.bot)
-        print('robot_class: {}'.format(robot_class))
-
         robot = robot_class(game)
         robot.run()
+
+    level_class = getattr(levels, args.level)
+    game.set_level(level_class)
+    game.new()
     game.run()
