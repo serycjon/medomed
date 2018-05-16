@@ -135,8 +135,8 @@ class LevelThree(Level):
         wall_tile_ids = [267, 268, 269, 270]
         wall_tiles = [tileset[id] for id in wall_tile_ids]
 
-        W = 20
-        H = 20
+        W = 10
+        H = 10
         map_data = generate_maze(H, W)
         map_data = convert_to_thick_walls(map_data)
 

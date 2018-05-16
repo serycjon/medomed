@@ -144,6 +144,7 @@ class Game:
                     'turn': self.player.turn,
                     'status': self.status,
                     'pick': self.player.pick,
+                    'can_forward': self.player.can_go_forward,
                     'drop': self.player.drop}
         if self.ready_for_command:
             try:

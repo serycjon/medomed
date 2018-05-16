@@ -26,6 +26,9 @@ class Robot:
     def turn(self, angle):
         return self.send(('turn', angle))
 
+    def can_forward(self, distance, angle=None):
+        return self.send(('can_forward', distance, angle))
+
     def forward(self, distance):
         return self.send(('forward', distance))
 

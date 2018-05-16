@@ -89,6 +89,36 @@ class Player(pg.sprite.Sprite):
                 except:
                     pass
 
+    def can_go_forward(self, distance, angle=None):
+        path_clear = True
+
+        # simulate the hitrect movement
+        if angle is None:
+            rot = self.rot
+        else:
+            rot = angle
+
+        vel = vec(distance, 0).rotate(-rot)
+        virtual_hit_rect = deepcopy(self.hit_rect)
+
+        num_steps = distance * 4
+        for i in range(num_steps):
+            coeff = i / (num_steps - 1)
+
+            offset = vel * coeff
+
+            current_hit_rect = virtual_hit_rect.move(offset.x * TILESIZE,
+                                                     offset.y * TILESIZE)
+            for wall in self.game.walls:
+                if current_hit_rect.colliderect(wall.rect):
+                    path_clear = False
+                    break
+            if not path_clear:
+                break
+
+        self.game.response_queue.put(path_clear)
+        self.game.ready_for_command = True
+
     def go_forward(self, distance):
         self.goal = self.pos + vec(TILESIZE * distance, 0).rotate(-self.rot)
         self.goal_mode = True
