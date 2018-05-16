@@ -106,11 +106,12 @@ class Player(pg.sprite.Sprite):
         found = False
         for hit in hits:
             if item_name == 'anything' or hit.type == item_name:
-                self.inventory.append(hit.type)
-                hit.kill()
-                self.game.response_queue.put("OK")
-                found = True
-                break
+                if hit.pickable:
+                    self.inventory.append(hit.type)
+                    hit.kill()
+                    self.game.response_queue.put("OK")
+                    found = True
+                    break
         if not found:
             self.game.response_queue.put("Not found")
         self.game.ready_for_command = True
@@ -253,7 +254,7 @@ class Wall(pg.sprite.Sprite):
         self.rect.y = self.y * TILESIZE
 
 class Item(pg.sprite.Sprite):
-    def __init__(self, game, pos, type):
+    def __init__(self, game, pos, type, pickable=True, bobbing=True):
         self._layer = ITEMS_LAYER
         self.groups = game.all_sprites, game.items
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -262,19 +263,22 @@ class Item(pg.sprite.Sprite):
         self.image = game.item_images[type]
         self.rect = self.image.get_rect()
         self.type = type
+        self.pickable = pickable
 
         self.pos = pos
         self.rect.center = pos
         self.tween = tween.easeInOutSine
+        self.bobbing = bobbing
         self.bob_step = 0
         self.bob_direction = 1
 
     def update(self):
         # bobbing
-        offset = ITEM_BOB_RANGE * (self.tween(self.bob_step / ITEM_BOB_RANGE) - 0.5)
-        self.rect.centery = self.pos.y + offset * self.bob_direction
+        if self.bobbing:
+            offset = ITEM_BOB_RANGE * (self.tween(self.bob_step / ITEM_BOB_RANGE) - 0.5)
+            self.rect.centery = self.pos.y + offset * self.bob_direction
 
-        self.bob_step += ITEM_BOB_SPEED
-        if self.bob_step > ITEM_BOB_RANGE:
-            self.bob_step = 0
-            self.bob_direction *= -1
+            self.bob_step += ITEM_BOB_SPEED
+            if self.bob_step > ITEM_BOB_RANGE:
+                self.bob_step = 0
+                self.bob_direction *= -1

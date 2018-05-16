@@ -162,6 +162,8 @@ class LevelThree(Level):
                                     r * TILESIZE))
 
         self.player_init_pos = random.choice(empty_cells)
+        self.goal_pos = random.choice(empty_cells)
+
         self.game.map_img = map_img
         self.game.map_rect = map_img.get_rect()
         self.wall_cells = wall_cells
@@ -179,3 +181,9 @@ class LevelThree(Level):
                      coords[0] * TILESIZE,
                      TILESIZE,
                      TILESIZE)
+
+        pos = self.goal_pos
+        x = pos[1] * TILESIZE + TILESIZE / 2
+        y = pos[0] * TILESIZE + TILESIZE / 2
+        Item(game, vec(x, y), 'goal',
+             pickable=False, bobbing=False)

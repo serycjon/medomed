@@ -45,7 +45,8 @@ MOB_LAYER = 2
 ITEMS_LAYER = 1
 
 # Items
-ITEM_IMAGES = {'apple': 'apple.png'}
+ITEM_IMAGES = {'apple': 'apple.png',
+               'goal': 'goal.png'}
 ITEM_BOB_RANGE = 8
 ITEM_BOB_SPEED = 0.2
 
